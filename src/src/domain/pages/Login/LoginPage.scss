@@ -1,0 +1,45 @@
+.LoginPage {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex: 1;
+        justify-content: space-evenly;
+        align-items: center;
+
+        &__field {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        &__label {
+            font-weight: 500;
+            color: #566573;
+            letter-spacing: 5px;
+        }
+
+        &__input{
+            border: 2px solid #F2F4F4;
+            padding: 5px 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        &__button{
+            width: 90%;
+            padding: 10px;
+            border-width: 0;
+            background-color: #566573;
+            color: white;
+            font-size: 20px;
+            border-radius: 8px;
+        }
+    }
+}

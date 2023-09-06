@@ -1,0 +1,18 @@
+.PublicLayout {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #F2F4F4;
+
+    &__content{
+        display: flex;
+        min-width: 300px;
+        min-height: 400px;
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+    }
+}

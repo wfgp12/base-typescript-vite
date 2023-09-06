@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: garit-backoffice
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      NODE_ENV: local
+    ports:
+      - 3000:3000
+    volumes:  
+      - ./src:/server
+    command: > 
+      sh -c "yarn install && yarn dev"
