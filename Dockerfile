@@ -1,6 +1,6 @@
-FROM node:18.16.1-alpine as builder
-WORKDIR /usr/src
-COPY src/ .
+FROM node:18.16.1-alpine AS builder
+WORKDIR /usr
+COPY . .
 RUN yarn install
 RUN yarn run build
 

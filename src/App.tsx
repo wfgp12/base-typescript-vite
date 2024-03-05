@@ -1,5 +1,6 @@
+import { AppRouter } from './routes'
+
 import './App.scss'
-import { AppRouter } from './domain/routes'
 
 function App() {
   return (
