@@ -1,3 +1,5 @@
+@import '../../index.scss';
+
 .LoginPage {
     width: 100%;
     display: flex;
@@ -36,7 +38,7 @@
             width: 90%;
             padding: 10px;
             border-width: 0;
-            background-color: #566573;
+            background-color: $color-gold;
             color: white;
             font-size: 20px;
             border-radius: 8px;
