@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { User } from '../../models/user';
+import { User } from '../../models/auth';
 
 interface AppSliceState {
     user: User | null
@@ -17,7 +17,8 @@ export const authenticationSlice = createSlice({
     initialState,
     reducers: {
         loginAction: (state, action: PayloadAction<AppSliceState>) => {
-            state.isAuth = action.payload.isAuth;
+            state.isAuth = true;
+            state.token = action.payload.token,
             state.user = action.payload.user
         },
         logoutAction : (state) => {

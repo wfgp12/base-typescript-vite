@@ -6,26 +6,33 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
 // Models
-import { User } from '../../models/user';
+import { User } from '../../models/auth';
 
 // Store - hooks
 import { useAppDispatch } from '../../redux/store/hooks';
 
 // Styles
 import './LoginPage.scss'
+import { loginService } from '../../service/auth/auth.service';
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
 
-  const [state, setState] = useState<User>({
-    username: "",
+  type userLogin = Pick<User, 'email'|'password'>
+  const [state, setState] = useState<userLogin>({
+    email: "",
     password: ""
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const response = await loginService(state.email, state.password);
+    if(!response) return
+
+    const {user, token} = response;
     dispatch(loginAction({
-      user: state,
+      user,
+      token,
       isAuth: true
     }))
     return
@@ -46,12 +53,12 @@ const LoginPage = () => {
       </div>
       <form id='loginForm' className='LoginPage__form' onSubmit={handleSubmit}>
         <div className='LoginPage__form__field'>
-          <label className='LoginPage__form__label'>username :</label>
+          <label className='LoginPage__form__label'>email :</label>
           <input
             type='email'
             className='LoginPage__form__input'
-            value={state.username}
-            onChange={(e) => handleChange(e, 'username')}
+            value={state.email}
+            onChange={(e) => handleChange(e, 'email')}
             required
           />
         </div>

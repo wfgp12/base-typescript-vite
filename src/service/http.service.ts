@@ -2,50 +2,61 @@ import axios, { AxiosError } from 'axios';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete';
 
+const getToken = (): string | null => {
+    return localStorage.getItem('token');
+}
+
 const post = async<T>(route: string, data: Record<string, unknown>) => {
     try {
-        const body  =  JSON.stringify(data);
-        return  await HttpRequest<T>('post', route, body );
+        return await HttpRequest<T>('post', route, data);
     } catch (error) {
         console.error(error);
     }
 }
 
-// const get = async(route: string, data: Record<string, any>) => {
-//     try {
-//         console.log('GET');
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+const get = async<T>(route: string, queryParams?: Record<string, unknown>) => {
+    try {
+        const url = queryParams ? `${route}?${new URLSearchParams(JSON.stringify(queryParams))}` : route;
+        return await HttpRequest<T>('get', url);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-// const put = async(route: string, data: Record<string, any>) => {
-//     try {
-//         console.log('PUT');
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+const put = async<T>(route: string, id: string, data?: Record<string, unknown>) => {
+    try {
+        const url = `${route}?id=${id}`;
+        return await HttpRequest<T>('put', url, data);
+    } catch (error) {
+        console.error(error);
+    }
+};
 
-// const _delete = async(route: string, data: Record<string, any>) => {
-//     try {
-//         console.log('Delete');
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+const destroy = async<T>(route: string, id: string) => {
+    try {
+        const url = `${route}?id=${id}`;
+        return await HttpRequest<T>('delete', url);
+    } catch (error) {
+        console.error(error);
+    }
+};
 
+const HttpRequest = async<T>(method: HttpMethod, route: string, data?: Record<string, unknown>): Promise<T> => {
+    const token = getToken(); // Obtener el token de sesión
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+    };
 
-const HttpRequest = async<T>(method: HttpMethod, route: string, data: string): Promise<T> => {
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`; // Incluir el token en el encabezado de autorización
+    }
 
     const config = {
         method: method,
         maxBodyLength: Infinity,
-        url: `https://jlc1xnil1i.execute-api.us-west-2.amazonaws.com${route}`,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: data
+        url: `http://localhost:3000/${route}`,
+        headers,
+        data: data,
     };
 
     try {
@@ -58,12 +69,8 @@ const HttpRequest = async<T>(method: HttpMethod, route: string, data: string): P
 
 const http = {
     post,
-    // get,
-    // put,
-    // delete: _delete
+    get,
+    put,
+    delete: destroy
 }
 export default http;
-
-
-
-
