@@ -1,73 +1,82 @@
 // Actions
-import { logoutAction } from '../../redux/slices/authSlice';
-
+import { logoutAction } from "../../redux/slices/authSlice";
 // Libraries
-import React from 'react'
-import { NavLink } from 'react-router-dom';
-
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 // Store - Hooks
-import { useAppDispatch, useAppSelector } from '../../redux/store/hooks';
-
+import { useAppDispatch, useAppSelector } from "../../redux/store/hooks";
+// Assets
+import HomeIcon from "../../assets/icons/home-outline.svg";
+import LogOutIcon from "../../assets/icons/log-out-outline.svg";
 // Styles
-import './ProtectedLayout.scss'
+import "./ProtectedLayout.scss";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
-    const user = useAppSelector(state => state.auth.user)
+    const [openSideBar, setOpenSideBar] = useState<boolean>(false);
+    const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
 
     const handleLogOut = () => {
-        dispatch(logoutAction())
+        dispatch(logoutAction());
     };
 
     return (
-        <div className='ProtectedLayout'>
-            <nav className='ProtectedLayout__navBar'>
-                <ul className='ProtectedLayout__navBar__menu'>
-                    <li className='ProtectedLayout__navBar__item'>
-                        <NavLink
-                            className={({ isActive }) =>
-                                isActive ? " ProtectedLayout__navBar__item--active" : " ProtectedLayout__navBar__item"
-                            }
-                            to="/home">Home
-                        
-                        </NavLink>
-                    </li>
-                    <li className='ProtectedLayout__navBar__item'>
-                        <NavLink
-                            className={({ isActive }) =>
-                                isActive ? " ProtectedLayout__navBar__item--active" : " ProtectedLayout__navBar__item"
-                            }
-                            to="/about">About</NavLink>
-                    </li>
-                    <li className='ProtectedLayout__navBar__item'>
-                        <NavLink
-                            className={({ isActive }) =>
-                                isActive ? " ProtectedLayout__navBar__item active" : " ProtectedLayout__navBar__item"
-                            }
-                            to="/profile">Profile</NavLink>
-                    </li>
-                    <li className='ProtectedLayout__navBar__item'>
-                        <NavLink
-                            className={({ isActive }) =>
-                                isActive ? " ProtectedLayout__navBar__item active" : " ProtectedLayout__navBar__item"
-                            }
-                            to="/not-found">NotFound</NavLink>
-                    </li>
-                </ul>
-                <ul className='ProtectedLayout__navBar__menu'>
-                    <li className='ProtectedLayout__navBar__item'>
-                        {user?.username}
-                    </li>
-                    <li className='ProtectedLayout__navBar__item'>
-                        <button onClick={handleLogOut}>LOG OUT</button>
-                    </li>
-                </ul>
-            </nav>
-            <div className='ProtectedLayout__content'>
-                {children}
+        <div className="protected-layout">
+        <nav className="protected-layout__navBar">
+            <div className="protected-layout__navBar__burger-container">
+            <label className="protected-layout__navBar__burger">
+                <input
+                type="checkbox"
+                id="burger"
+                onChange={(e) => setOpenSideBar(e.target.checked)}
+                />
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
             </div>
+            <ul className="protected-layout__navBar__menu">
+            <li className="protected-layout__navBar__user">
+                <span>{`${user?.name} ${user?.lastName}`}</span>
+                <span className="subtitle">{user?.email}</span>
+            </li>
+            </ul>
+        </nav>
+        <div className="protected-layout__container">
+            <div
+                className={
+                    openSideBar
+                        ? "protected-layout__side-bar protected-layout__side-bar--open"
+                        : "protected-layout__side-bar"
+                    }
+            >
+            <div className="protected-layout__side-bar__menu">
+                <NavLink
+                className={({ isActive }) =>
+                    isActive
+                        ? "protected-layout__side-bar__item protected-layout__side-bar__item--active"
+                        : " protected-layout__side-bar__item"
+                    }
+                    to="/home"
+                >
+                    <img src={HomeIcon} alt="home-icons" />
+                    Home
+                </NavLink>
+            </div>
+            <div className="protected-layout__side-bar__menu">
+                <button
+                    className="protected-layout__side-bar__item protected-layout__side-bar__log-out"
+                    onClick={handleLogOut}
+                >
+                <img src={LogOutIcon} alt="log-out-icon" />
+                    LOG OUT
+                </button>
+            </div>
+            </div>
+            <div className="protected-layout__content">{children}</div>
         </div>
-    )
-}
+        </div>
+    );
+};
 
 export default ProtectedLayout;

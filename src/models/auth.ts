@@ -1,23 +1,31 @@
+import { UserDAO } from "./user";
+
 export interface LoginResponse {
-    user:  User;
+    user:  UserDAO;
     token: string;
 }
 
-export interface User {
-    _id:            string;
-    fullName:       string;
-    email:          string;
-    password:       string;
-    documentNumber: string;
-    dateOfBirth:    Date;
-    country:        string;
-    roles?:          Roles;
-    __v:            number;
+export interface LoginForm {
+    email: string,
+    password: string
 }
 
-export interface Roles {
-    _id:          string;
-    name:         string;
-    permissions?: string[];
-    __v:          number;
+export interface validateTokenResponse {
+    user: UserDAO
+}
+
+export interface RegisterForm extends Omit<UserDAO, 'id'> {
+    password: string
+    confirmPassword: string
+}
+
+export interface RegisterResponse {
+    id:          number;
+    name:        string;
+    lastName:    string;
+    email:       string;
+    phoneNumber: string;
+    password:    string;
+    updatedAt:   Date;
+    createdAt:   Date;
 }

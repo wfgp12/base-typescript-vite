@@ -1,17 +1,11 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  backend:
-    container_name: base-ts-vite
+  app:
+    container_name: taller3-react-vite
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      NODE_ENV: local
+    build: .
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
-      - ./:/server
-    command: > 
-      sh -c "yarn install && yarn dev"
+      - .:/app

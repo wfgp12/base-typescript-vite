@@ -1,9 +1,9 @@
-FROM node:18.16.1-alpine AS builder
-WORKDIR /usr
-COPY . .
-RUN yarn install
-RUN yarn run build
+FROM node:21-alpine
 
-FROM nginx:stable-alpine
-COPY nginx/default.conf /etc/nginx/conf.d/
-COPY --from=builder /usr/src/build /usr/share/nginx/html
+WORKDIR /app
+COPY package.json .
+RUN yarn install
+
+COPY . .
+
+CMD ["yarn", "dev"]

@@ -1,84 +1,81 @@
 // Actions
-import { loginAction } from '../../redux/slices/authSlice';
+import { loginAction } from "../../redux/slices/authSlice";
 
 // Libraries
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 // Models
-import { User } from '../../models/auth';
+import { LoginForm } from "../../models/auth";
 
 // Store - hooks
-import { useAppDispatch } from '../../redux/store/hooks';
+import { useAppDispatch } from "../../redux/store/hooks";
 
 // Styles
-import './LoginPage.scss'
-import { loginService } from '../../service/auth/auth.service';
+import "./LoginPage.scss";
+import { loginService } from "../../service/auth/auth.service";
+import { useForm } from "../../hooks/useForm";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
 
-  type userLogin = Pick<User, 'email'|'password'>
-  const [state, setState] = useState<userLogin>({
+  const {values, handleChange} = useForm<LoginForm>({
     email: "",
     password: ""
-  })
+  });
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await loginService(state.email, state.password);
-    if(!response) return
+    const response = await loginService(values.email, values.password);
+    if (!response) return;
 
-    const {user, token} = response;
-    dispatch(loginAction({
-      user,
-      token,
-      isAuth: true
-    }))
-    return
-  };
-
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>, key: string) => {
-    setState((prevState) => ({ 
-      ...prevState, 
-      [key]: target.value 
-    }))
-    return
+    const { user, token } = response;
+    dispatch(
+      loginAction({
+        user,
+        token
+      })
+    );
+    return;
   };
 
   return (
-    <div className='LoginPage'>
+    <div className="LoginPage">
       <div>
         <h1>LOGIN PAGE</h1>
       </div>
-      <form id='loginForm' className='LoginPage__form' onSubmit={handleSubmit}>
-        <div className='LoginPage__form__field'>
-          <label className='LoginPage__form__label'>email :</label>
+      <form id="loginForm" className="LoginPage__form" onSubmit={handleSubmit}>
+        <div className="LoginPage__form__field">
+          <label className="LoginPage__form__label">email :</label>
           <input
-            type='email'
-            className='LoginPage__form__input'
-            value={state.email}
-            onChange={(e) => handleChange(e, 'email')}
+            type="email"
+            name="email"
+            className="LoginPage__form__input"
+            value={values.email}
+            onChange={handleChange}
             required
           />
         </div>
-        <div className='LoginPage__form__field'>
-          <label className='LoginPage__form__label'>password: </label>
+        <div className="LoginPage__form__field">
+          <label className="LoginPage__form__label">password: </label>
           <input
-            type='password'
-            className='LoginPage__form__input'
-            value={state.password}
-            onChange={(e) => handleChange(e, 'password')}
+            type="password"
+            name="password"
+            className="LoginPage__form__input"
+            value={values.password}
+            onChange={handleChange}
             required
+            autoComplete="current-password"
           />
         </div>
-        <button className='LoginPage__form__button' type='submit'>Log in</button>
+        <button className="LoginPage__form__button" type="submit">
+          Log in
+        </button>
       </form>
-        <p>you do not have an account</p>
-        <Link to="/register" >Create Account</Link>
+      <p>you do not have an account</p>
+      <Link to="/register">Create Account</Link>
     </div>
-
-  )
+  );
 };
 
 export default LoginPage;
